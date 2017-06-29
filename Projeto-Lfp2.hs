@@ -20,7 +20,7 @@ initScore2 = 0
 
 main :: IO ()
 main =
-  let winConfig = ((0,0),(width,height),"Hello, Fungen World! Press Q to quit")
+  let winConfig = ((0,0),(width,height),"Project - Lfp2 Press Q to quit")
       bar1     = objectGroup "bar1Group"  [createBar1]
       bar2     = objectGroup "bar2Group"  [createBar2]
       ball    = objectGroup "ballGroup" [createBall]
@@ -33,20 +33,20 @@ main =
 createBall :: GameObject ()
 createBall =
   let ballPic = Basic (Circle 6.0 0.0 1.0 0.0 Filled)
-  in object "ball" ballPic False (w/2,h/2) (-5,5) ()
+  in object "ball" ballPic False (w/2,h/2) (-3,3) ()
 
 
 createBar1 :: GameObject ()
 createBar1 =
   let barBound = [(-25,-6),(25,-6),(25,6),(-25,6)]
       barPic   = Basic (Polyg barBound 1.0 1.0 1.0 Filled)
-  in object "bar1" barPic False (w/2,30) (0,0) ()
+  in object "bar1" barPic False (w/2,20) (0,0) ()
   
 createBar2 :: GameObject ()
 createBar2 =
   let barBound = [(-25,-6),(25,-6),(25,6),(-25,6)]
       barPic   = Basic (Polyg barBound 1.0 1.0 1.0 Filled)
-  in object "bar2" barPic False (w/2,220) (0,0) ()
+  in object "bar2" barPic False (w/2,230) (0,0) ()
 
 moveBar1ToRight :: Modifiers -> Position -> IOGame GameAttribute () () () ()
 moveBar1ToRight _ _ = do
@@ -96,10 +96,10 @@ gameCycle = do
   col2 <- objectRightMapCollision ball
   when (col1 || col2) (reverseXSpeed ball)
   col3 <- objectTopMapCollision ball
-  when col3 (do reverseYSpeed ball
+  when col3 (do setObjectPosition (w/2,h/2) ball
                 setGameAttribute(GA (n1 + 1) n2))
   col4 <- objectBottomMapCollision ball
-  when col4 (do reverseYSpeed ball
+  when col4 (do setObjectPosition (w/2,h/2) ball
                 setGameAttribute(GA n1 (n2 + 1)))
   col5 <- objectsCollision ball bar01
   let (_,vy) = getGameObjectSpeed ball
@@ -107,5 +107,4 @@ gameCycle = do
   col6 <- objectsCollision ball bar02
   let (_,vy) = getGameObjectSpeed ball
   when (and [col6, vy > 0])  (reverseYSpeed ball)
-  showFPS TimesRoman24 (w-40,0) 1.0 0.0 0.0
   
